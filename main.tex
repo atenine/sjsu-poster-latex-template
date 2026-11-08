@@ -35,11 +35,11 @@
 % Title
 % ====================
 
-\title{Some fancy title: followed by some more text}
+\title{Probing acoustic information through transformer-based speech encoders}
 
-\author{Rohan Mohapatra \inst{1} \and Vidhaat Dunna \inst{2}}
+\author{Vidhaat Dunna, Hahn Koo, Kelsey Kraus}
 
-\institute[shortinst]{\inst{1} Some Institute \samelineand \inst{2} Another Institute}
+\institute[shortinst]{San José State University}
 
 % ====================
 % Footer (optional)
@@ -47,8 +47,8 @@
 
 \footercontent{
   \href{https://sjsu.edu/}{https://sjsu.edu} \hfill
-  ABC Conference 2025, New York --- XYZ-1234 \hfill
-  {MICoSys Lab}}
+  % ABC Conference 2025, New York --- XYZ-1234 \hfill
+  {Department of Linguistics and Language Development}}
 % (can be left out to remove footer)
 
 % ====================
@@ -56,8 +56,10 @@
 % ====================
 
 % use this to include logos on the left and/or right side of the header:
-% \logoright{\includegraphics[height=6cm]{sjsu_logos/sjsu.png}}
-\logoleft{\includegraphics[height=2.5cm]{sjsu_logos/sjsu_cs.png}}
+\logoright{\includegraphics[height=3cm]{sjsu_logos/sjsu_cs.png}}
+\logoleft{\includegraphics[height=3cm]{sjsu_logos/DEPT_LINGLANG_Gold_Reversed.png}}
+% \logoleft{\includegraphics[height=5cm]{sjsu_logos/SJSU_University_monogram_Reversed.png}}
+% \logoright{\includegraphics[height=6cm]{sjsu_logos/SpartanSpirit[reversed].png}}
 
 % ====================
 % Body
@@ -71,57 +73,21 @@
 
 \begin{column}{\colwidth}
 
-  \begin{block}{A block title}
+  \begin{block}{Abstract}
 
-    Some block contents, followed by a diagram, followed by a dummy paragraph.
-
-    \begin{figure}
-      \centering
-      \begin{tikzpicture}[scale=6]
-        \draw[step=0.25cm,color=gray] (-1,-1) grid (1,1);
-        \draw (1,0) -- (0.2,0.2) -- (0,1) -- (-0.2,0.2) -- (-1,0)
-          -- (-0.2,-0.2) -- (0,-1) -- (0.2,-0.2) -- cycle;
-      \end{tikzpicture}
-      \caption{A figure caption.}
-    \end{figure}
-
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ultricies
-    eget libero ac ullamcorper. 
+    Transformer-based audio encoders are commonly used as the first step for many speech processing applications. These encoders convert input audio data into high-dimensional vector representations of audio (embeddings) by first passing audio through a preprocessor, then through a deep neural network. However, these encoders are still a black box, with decoders on encoder output providing good performance without increasing our knowledge of how (or whether) underlying linguistic features are used to perform language understanding tasks. Investigations into how speech information propagates through these encoders have been performed by fitting classifiers (probes) to predict high-level information from encoders’ internal layers [1][6][7], but probing methods are not standardized, making results difficult to compare: do inconsistencies in probing performance result from differences in pretrained models, or from a lack of standardization in probing methodology?
 
   \end{block}
 
-  \begin{block}{A block containing a list}
+  \begin{block}{Methods}
 
-    Nam vulputate nunc felis, non condimentum lacus porta ultrices. Nullam sed
-    sagittis metus. Etiam consectetur gravida urna quis suscipit.
-
-    \begin{itemize}
-      \item \textbf{Mauris tempor} risus nulla, sed ornare
-      \item \textbf{Libero tincidunt} a duis congue vitae
-      \item \textbf{Dui ac pretium} morbi justo neque, ullamcorper
-    \end{itemize}
-
-    Eget augue porta, bibendum venenatis tortor.
+    we use the TIMIT dataset [2] to train probes for phone label and manner of articulation (MOA) on internal representations from the wav2vec2.0 [3], whisper-small [4], and voxtral-mini-4b [5] encoders. We first split each clip in TIMIT into phone segments. These segments are passed through wav2vec (11 layers, self-supervised), whisper-small (11 layers, weakly-supervised multitask), and voxtral (31 layers, supervised multitask) to generate embeddings. Frame-representations in the embeddings are averaged over the time dimension, resulting in one time-averaged representation per encoder-layer pair. For each pair, a linear probe with ReLU activations is trained to predict phone labels and MOA.
 
   \end{block}
 
-  \begin{alertblock}{A highlighted block}
+  \begin{alertblock}{Time-averaged Frame Representations}
 
-    This block catches your eye, so \textbf{important stuff} should probably go
-    here.
-
-    \begin{itemize}
-      \item \textbf{Fusce dapibus tellus} vel tellus semper finibus. In
-        consequat, nibh sed mattis luctus, augue diam fermentum lectus.
-      \item \textbf{In euismod erat metus} non ex. Vestibulum luctus augue in
-        mi condimentum, at sollicitudin lorem viverra.
-      \item \textbf{Suspendisse vulputate} mauris vel placerat consectetur.
-        Mauris semper, purus ac hendrerit molestie, elit mi dignissim odio, in
-        suscipit felis sapien vel ex.
-    \end{itemize}
-
-    Aenean tincidunt risus eros, at gravida lorem sagittis vel. Vestibulum ante
-    ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.
+    Here, we will explain what actually goes into making one of the frame averaged representations. We should try and make a diagram here to have the flow easier to visualize (and have some sort of cool graphic, too c: )
 
   \end{alertblock}
 
@@ -131,62 +97,34 @@
 
 \begin{column}{\colwidth}
 
-  \begin{block}{A block containing an enumerated list}
+  \begin{block}{Results}
 
-    Vivamus congue volutpat elit non semper. Praesent molestie nec erat ac
-    interdum. In quis suscipit erat. \textbf{Phasellus mauris felis, molestie
-    ac pharetra quis}, tempus nec ante. 
-
-    \begin{enumerate}
-      \item \textbf{Morbi mauris purus}, egestas at vehicula et, convallis
-        accumsan orci. Orci varius natoque penatibus et magnis dis parturient
-        montes, nascetur ridiculus mus.
-      \item \textbf{Cras vehicula blandit urna ut maximus}. Aliquam blandit nec
-        massa ac sollicitudin. Curabitur cursus, metus nec imperdiet bibendum,
-        velit lectus faucibus dolor, quis gravida metus mauris gravida turpis.
-      \item \textbf{Vestibulum et massa diam}. Phasellus fermentum augue non
-        nulla accumsan, non rhoncus lectus condimentum.
-    \end{enumerate}
+    For both phone label and MOA predictions, wav2vec probe accuracy decreases as we probe further along its internal layers, while both whisper and voxtral increase to a plateau early on in their layers. MOA accuracy for wav2vec decreases from its layer 0 maximum of 92\% down to 77\% on its final layer, and phone label accuracy drops from 67\% to 40\%.
+    Whisper and voxtral probe accuracies show the opposite trend: whisper MOA probe accuracies increase from 50\% to 89\%, and voxtral probes increase from 77\% to 92\%. Phone label probes show similar behavior, with whisper accuracy increasing from 13\% to 65\%, and voxtral from 43\% to 71\%.
 
   \end{block}
 
-  \begin{block}{Fusce aliquam magna velit}
+  \begin{block}{Diagram of results!}
 
-    Et rutrum ex euismod vel. Pellentesque ultricies, velit in fermentum
-    vestibulum, lectus nisi pretium nibh, sit amet aliquam lectus augue vel
-    velit. Suspendisse rhoncus massa porttitor augue feugiat molestie. Sed
-    molestie ut orci nec malesuada. Sed ultricies feugiat est fringilla
-    posuere.
+    One day, I will put a cool little matplotlib chart here
 
-    \begin{figure}
+  \end{block}
+
+  \begin{block}{A table of results, maybe?}
+
+    \begin{table}
       \centering
-      \begin{tikzpicture}
-        \begin{axis}[
-            scale only axis,
-            no markers,
-            domain=0:2*pi,
-            samples=100,
-            axis lines=center,
-            axis line style={-},
-            ticks=none]
-          \addplot[red] {sin(deg(x))};
-          \addplot[blue] {cos(deg(x))};
-        \end{axis}
-      \end{tikzpicture}
-      \caption{Another figure caption.}
-    \end{figure}
-
-  \end{block}
-
-  \begin{block}{Nam cursus consequat egestas}
-
-    Nulla eget sem quam. Ut aliquam volutpat nisi vestibulum convallis. Nunc a
-    lectus et eros facilisis hendrerit eu non urna. Interdum et malesuada fames
-    ac ante \textit{ipsum primis} in faucibus. Etiam sit amet velit eget sem
-    euismod tristique. Praesent enim erat, porta vel mattis sed, pharetra sed
-    ipsum. Morbi commodo condimentum massa, \textit{tempus venenatis} massa
-    hendrerit quis. Maecenas sed porta est. Praesent mollis interdum lectus,
-    sit amet sollicitudin risus tincidunt non.
+      \begin{tabular}{l r r c}
+        \toprule
+        \textbf{Encoder} & \textbf{layer 0} & \textbf{final layer}\\
+        \midrule
+        Wav2Vec & 13.37 & 384,394 \\
+        Whisper & 2.17 & 1,392 \\
+        Voxtral & 3.14 & 83,742 \\
+        \bottomrule
+      \end{tabular}
+      \caption{A table caption.}
+    \end{table}
 
   \end{block}
 
@@ -195,57 +133,9 @@
 \separatorcolumn
 
 \begin{column}{\colwidth}
+  \begin{block}{Conclusion}
 
-  \begin{exampleblock}{A highlighted block containing some math}
-
-    A different kind of highlighted block.
-
-    $$
-    \int_{-\infty}^{\infty} e^{-x^2}\,dx = \sqrt{\pi}
-    $$
-
-    Interdum et malesuada fames $\{1, 4, 9, \ldots\}$ ac ante ipsum primis in
-    faucibus. Cras eleifend dolor eu nulla suscipit suscipit. Sed lobortis non
-    felis id vulputate.
-
-    \heading{A heading inside a block}
-    Vivamus dictum $\mathbf{u}^\intercal\mathbf{v}$ sagittis odio, vel porta erat congue sed. Maecenas ut dolor quis arcu auctor porttitor.
-
-    \heading{Another heading inside a block}
-
-    Sed augue erat, scelerisque a purus ultricies, placerat porttitor neque.
-    Donec $P(y \mid x)$ fermentum consectetur $\nabla_x P(y \mid x)$ sapien
-    sagittis egestas. Duis eget leo euismod nunc viverra imperdiet nec id
-    justo.
-
-  \end{exampleblock}
-
-  \begin{block}{Nullam vel erat at velit convallis laoreet}
-
-    Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
-    inceptos himenaeos. Phasellus libero enim, gravida sed erat sit amet,
-    scelerisque congue diam. Fusce dapibus dui ut augue pulvinar iaculis.
-
-    \begin{table}
-      \centering
-      \begin{tabular}{l r r c}
-        \toprule
-        \textbf{First column} & \textbf{Second column} & \textbf{Third column} & \textbf{Fourth} \\
-        \midrule
-        Foo & 13.37 & 384,394 & $\alpha$ \\
-        Bar & 2.17 & 1,392 & $\beta$ \\
-        Baz & 3.14 & 83,742 & $\delta$ \\
-        Qux & 7.59 & 974 & $\gamma$ \\
-        \bottomrule
-      \end{tabular}
-      \caption{A table caption.}
-    \end{table}
-
-    Nulla varius finibus volutpat. Mauris molestie lorem tincidunt, iaculis
-    libero at, gravida ante. Phasellus at felis eu neque suscipit suscipit.
-    Integer ullamcorper, dui nec pretium ornare, urna dolor consequat libero,
-    in feugiat elit lorem euismod lacus. Pellentesque sit amet dolor mollis,
-    auctor urna non, tempus sem.
+    Our results for wav2vec challenge prior probing studies, suggesting that probing methods alone may not reliably test the layerwise accessibility of MOA and general phone information. Instead, probing results appear to be sensitive to encoder pretraining and probe hyperparameters. Future work plans to test whether probe results for higher-level acoustic features are similarly variable, and how these results compare with downstream ASR performance.
 
   \end{block}
 

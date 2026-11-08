@@ -73,8 +73,20 @@
 \setbeamercolor*{bibliography entry location}{fg=black}
 \setbeamercolor*{bibliography entry note}{fg=black}
 
-\setsansfont{Open Sans}
-\setmainfont{Merriweather}
+\setsansfont{Open Sans}[
+    UprightFont = *,
+    ItalicFont = *-Italic,
+    BoldFont = *,
+    UprightFeatures = {RawFeature={axis={wght=400}}},
+    BoldFeatures = {RawFeature={axis={wght=650}}},
+]
+\setmainfont{Merriweather}[
+    UprightFont = *,
+    ItalicFont = *-Italic,
+    BoldFont = *-Bold,
+    UprightFeatures = {RawFeature={axis={wght=400}}},
+    BoldFeatures = {RawFeature={axis={wght=800}}}
+]
 
 \setbeamerfont{headline}{family=\rmfamily}
 \setbeamerfont{headline title}{size=\Huge,series=\bfseries}

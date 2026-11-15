@@ -75,19 +75,31 @@
 
   \begin{block}{Abstract}
 
-    Transformer-based audio encoders are commonly used as the first step for many speech processing applications. These encoders convert input audio data into high-dimensional vector representations of audio (embeddings) by first passing audio through a preprocessor, then through a deep neural network. However, these encoders are still a black box, with decoders on encoder output providing good performance without increasing our knowledge of how (or whether) underlying linguistic features are used to perform language understanding tasks. Investigations into how speech information propagates through these encoders have been performed by fitting classifiers (probes) to predict high-level information from encoders’ internal layers [1][6][7], but probing methods are not standardized, making results difficult to compare: do inconsistencies in probing performance result from differences in pretrained models, or from a lack of standardization in probing methodology?
+    Transformer-based audio encoders are commonly used as the first step for many speech processing applications. 
+    These encoders convert input audio data into high-dimensional vector representations of audio (embeddings) 
+    by first passing audio through a preprocessor, then through a deep neural network. However, these encoders 
+    are still a black box, with decoders on encoder output providing good performance without increasing our 
+    knowledge of how (or whether) underlying linguistic features are used to perform language understanding tasks. 
+    Investigations into how speech information propagates through these encoders have been performed by fitting 
+    classifiers (probes) to predict high-level information from encoders’ internal layers [1][6][7], but probing 
+    methods are not standardized, making results difficult to compare: do inconsistencies in probing performance 
+    result from differences in pretrained models, or from a lack of standardization in probing methodology?
 
   \end{block}
 
-  \begin{block}{Methods}
+  \begin{block}{Background}
 
-    we use the TIMIT dataset [2] to train probes for phone label and manner of articulation (MOA) on internal representations from the wav2vec2.0 [3], whisper-small [4], and voxtral-mini-4b [5] encoders. We first split each clip in TIMIT into phone segments. These segments are passed through wav2vec (11 layers, self-supervised), whisper-small (11 layers, weakly-supervised multitask), and voxtral (31 layers, supervised multitask) to generate embeddings. Frame-representations in the embeddings are averaged over the time dimension, resulting in one time-averaged representation per encoder-layer pair. For each pair, a linear probe with ReLU activations is trained to predict phone labels and MOA.
+    we use the TIMIT dataset [2] to train probes for phone label and manner of articulation (MOA) on internal 
+    representations from the wav2vec2.0 [3], whisper-small [4], and voxtral-mini-4b [5] encoders. We first split 
+    each clip in TIMIT into phone segments. These segments are passed through wav2vec (11 layers, self-supervised), 
+    whisper-small (11 layers, weakly-supervised multitask), and voxtral (31 layers, supervised multitask) to generate 
+    embeddings. Frame-representations in the embeddings are averaged over the time dimension, resulting in one 
+    time-averaged representation per encoder-layer pair. For each pair, a linear probe with ReLU activations is 
+    trained to predict phone labels and MOA.
 
   \end{block}
 
-  \begin{alertblock}{Time-averaged Frame Representations}
-
-    Here, we will explain what actually goes into making one of the frame averaged representations. We should try and make a diagram here to have the flow easier to visualize (and have some sort of cool graphic, too c: )
+  \begin{alertblock}{Encoders}
 
   \end{alertblock}
 
@@ -97,19 +109,27 @@
 
 \begin{column}{\colwidth}
 
-  \begin{block}{Results}
+  
+  \begin{block}{Preprocessing}
+    \begin{alertblock}{Time-averaged Frame Representations}
 
-    For both phone label and MOA predictions, wav2vec probe accuracy decreases as we probe further along its internal layers, while both whisper and voxtral increase to a plateau early on in their layers. MOA accuracy for wav2vec decreases from its layer 0 maximum of 92\% down to 77\% on its final layer, and phone label accuracy drops from 67\% to 40\%.
-    Whisper and voxtral probe accuracies show the opposite trend: whisper MOA probe accuracies increase from 50\% to 89\%, and voxtral probes increase from 77\% to 92\%. Phone label probes show similar behavior, with whisper accuracy increasing from 13\% to 65\%, and voxtral from 43\% to 71\%.
+      Here, we will explain what actually goes into making one of the frame averaged representations. We should 
+      try and make a diagram here to have the flow easier to visualize (and have some sort of cool graphic, too c: )
+
+    
+    \end{alertblock}
+    \begin{alertblock}{Probing}
+      
+    \end{alertblock}
+    For both phone label and MOA predictions, wav2vec probe accuracy decreases as we probe further along its 
+    internal layers, while both whisper and voxtral increase to a plateau early on in their layers. MOA 
+    accuracy for wav2vec decreases from its layer 0 maximum of 92\% down to 77\% on its final layer, and 
+    phone label accuracy drops from 67\% to 40\%.
+    Whisper and voxtral probe accuracies show the opposite trend: whisper MOA probe accuracies increase 
+    from 50\% to 89\%, and voxtral probes increase from 77\% to 92\%. Phone label probes show similar 
+    behavior, with whisper accuracy increasing from 13\% to 65\%, and voxtral from 43\% to 71\%.
 
   \end{block}
-
-  \begin{block}{Diagram of results!}
-
-    One day, I will put a cool little matplotlib chart here
-
-  \end{block}
-
   \begin{block}{A table of results, maybe?}
 
     \begin{table}
@@ -133,17 +153,27 @@
 \separatorcolumn
 
 \begin{column}{\colwidth}
+  \begin{block}{Results}
+
+    \includegraphics[width=\linewidth]{figures/layerwisePhoneAccuracy.png}\\
+    \includegraphics[width=\linewidth]{figures/layerwiseMoaAccuracy.png}
+
+  \end{block}
   \begin{block}{Conclusion}
 
-    Our results for wav2vec challenge prior probing studies, suggesting that probing methods alone may not reliably test the layerwise accessibility of MOA and general phone information. Instead, probing results appear to be sensitive to encoder pretraining and probe hyperparameters. Future work plans to test whether probe results for higher-level acoustic features are similarly variable, and how these results compare with downstream ASR performance.
+    Our results for wav2vec challenge prior probing studies, suggesting that probing methods 
+    appear to be sensitive to encoder pretraining and probe hyperparameters.
 
   \end{block}
 
   \begin{block}{References}
 
-    \nocite{*}
-    \footnotesize{\bibliographystyle{ieeetr}\bibliography{poster}}
-
+    {
+      \tiny
+      \nocite{*}
+      \bibliographystyle{ieeetr}
+      \bibliography{poster}
+    }
   \end{block}
 
 \end{column}

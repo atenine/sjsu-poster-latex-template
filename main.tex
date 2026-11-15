@@ -87,19 +87,10 @@
 
   \begin{block}{Background}
 
-    we use the TIMIT dataset [2] to train probes for phone label and manner of articulation (MOA) on internal 
-    representations from the wav2vec2.0 [3], whisper-small [4], and voxtral-mini-4b [5] encoders. We first split 
-    each clip in TIMIT into phone segments. These segments are passed through wav2vec (11 layers, self-supervised), 
-    whisper-small (11 layers, weakly-supervised multitask), and voxtral (31 layers, supervised multitask) to generate 
-    embeddings. Frame-representations in the embeddings are averaged over the time dimension, resulting in one 
-    time-averaged representation per encoder-layer pair. For each pair, a linear probe with ReLU activations is 
-    trained to predict phone labels and MOA.
+    Audio encoders are used to generate vectors that encode the information present in one "frame", around 20ms of audio. We choose 
+    to probe three encoders that differ in their training strategies:
 
   \end{block}
-
-  \begin{alertblock}{Encoders}
-
-  \end{alertblock}
 
 \end{column}
 
@@ -109,15 +100,16 @@
 
   
   \begin{block}{Preprocessing}
-    We generate embeddings for entire clips from the TIMIT dataset, split the embeddings at the segment-level, then average them over the time dimension.
+    We pass clips from the TIMIT dataset [2] through our encoders, then split the embeddings at the segment-level. 
+    Segment embeddings are averaged over the time-dimension before being used to train fully-connected linear classifiers.
 
-    \begin{alertblock}{Time-averaged Frame Representations}
+    % \begin{alertblock}{Time-averaged Frame Representations}
       \includegraphics[width=\linewidth]{figures/speechRender.png}
-    \end{alertblock}
-    \begin{alertblock}{Probing}
-      We train linear classifiers to predict manner of articulation and phone label from segment-averaged representations.
+    % \end{alertblock}
+    % \begin{alertblock}{Probing}
+    %   We train linear classifiers to predict manner of articulation and phone label from segment-averaged representations.
       
-    \end{alertblock}
+    % \end{alertblock}
 
   \end{block}
   \begin{block}{A table of results, maybe?}
@@ -157,15 +149,14 @@
   \end{block}
 
   \begin{block}{References}
-
     {
       \tiny
       \nocite{*}
       \bibliographystyle{ieeetr}
+      \vspace{-1ex}
       \bibliography{poster}
     }
   \end{block}
-
 \end{column}
 
 \separatorcolumn

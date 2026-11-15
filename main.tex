@@ -76,12 +76,10 @@
   \begin{block}{Abstract}
 
     Transformer-based audio encoders are commonly used as the first step for many speech processing applications. 
-    However, these encoders are still a black box, with decoders on encoder output providing good performance without increasing our 
-    knowledge of how input linguistic features are used to perform language understanding tasks. 
-    Investigations into how speech information propagates through these encoders have been performed by fitting 
-    classifiers (probes) to predict high-level information from encoders’ internal layers [1][6][7], but probing 
-    methods are not standardized, making results difficult to compare: do inconsistencies in probing performance 
-    result from differences in pretrained models, or from a lack of standardization in probing methodology?
+    However, it is unclear how input linguistic features are used to perform language understanding tasks. 
+    Classifiers (probes) can be used to predict high-level information from encoders’ internal layers, but probing 
+    methods are not standardized, making results difficult to compare: what do inconsistencies in probing performance 
+    ultimately stem from?
 
   \end{block}
 
@@ -89,6 +87,16 @@
 
     Audio encoders are used to generate vectors that encode the information present in one "frame", around 20ms of audio. We choose 
     to probe three encoders that differ in their training strategies:
+
+    \begin{alertblock}{Wav2Vec2.0}
+      wav2vec2 trains in a wav2vec2 way
+    \end{alertblock}
+    \begin{alertblock}{Whisper}
+      whisper has an absurd amount of weakly supervised stuff going on
+    \end{alertblock}
+    \begin{alertblock}{Voxtral}
+      voxtral is weird and has a big language model decoder
+    \end{alertblock}
 
   \end{block}
 
@@ -100,7 +108,7 @@
 
   
   \begin{block}{Preprocessing}
-    We pass clips from the TIMIT dataset [2] through our encoders, then split the embeddings at the segment-level. 
+    We pass clips from the TIMIT dataset through our encoders, then split the embeddings at the segment-level. 
     Segment embeddings are averaged over the time-dimension before being used to train fully-connected linear classifiers.
 
     % \begin{alertblock}{Time-averaged Frame Representations}

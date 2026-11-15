@@ -76,10 +76,8 @@
   \begin{block}{Abstract}
 
     Transformer-based audio encoders are commonly used as the first step for many speech processing applications. 
-    These encoders convert input audio data into high-dimensional vector representations of audio (embeddings) 
-    by first passing audio through a preprocessor, then through a deep neural network. However, these encoders 
-    are still a black box, with decoders on encoder output providing good performance without increasing our 
-    knowledge of how (or whether) underlying linguistic features are used to perform language understanding tasks. 
+    However, these encoders are still a black box, with decoders on encoder output providing good performance without increasing our 
+    knowledge of how input linguistic features are used to perform language understanding tasks. 
     Investigations into how speech information propagates through these encoders have been performed by fitting 
     classifiers (probes) to predict high-level information from encoders’ internal layers [1][6][7], but probing 
     methods are not standardized, making results difficult to compare: do inconsistencies in probing performance 
@@ -111,23 +109,15 @@
 
   
   \begin{block}{Preprocessing}
+    We generate embeddings for entire clips from the TIMIT dataset, split the embeddings at the segment-level, then average them over the time dimension.
+
     \begin{alertblock}{Time-averaged Frame Representations}
-
-      Here, we will explain what actually goes into making one of the frame averaged representations. We should 
-      try and make a diagram here to have the flow easier to visualize (and have some sort of cool graphic, too c: )
-
-    
+      \includegraphics[width=\linewidth]{figures/speechRender.png}
     \end{alertblock}
     \begin{alertblock}{Probing}
+      We train linear classifiers to predict manner of articulation and phone label from segment-averaged representations.
       
     \end{alertblock}
-    For both phone label and MOA predictions, wav2vec probe accuracy decreases as we probe further along its 
-    internal layers, while both whisper and voxtral increase to a plateau early on in their layers. MOA 
-    accuracy for wav2vec decreases from its layer 0 maximum of 92\% down to 77\% on its final layer, and 
-    phone label accuracy drops from 67\% to 40\%.
-    Whisper and voxtral probe accuracies show the opposite trend: whisper MOA probe accuracies increase 
-    from 50\% to 89\%, and voxtral probes increase from 77\% to 92\%. Phone label probes show similar 
-    behavior, with whisper accuracy increasing from 13\% to 65\%, and voxtral from 43\% to 71\%.
 
   \end{block}
   \begin{block}{A table of results, maybe?}

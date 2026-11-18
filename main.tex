@@ -89,7 +89,7 @@
     to probe three encoders that differ in their training strategies:
 
     \begin{alertblock}{Wav2Vec2.0}
-      wav2vec2 trains in a wav2vec2 way
+      Self-supervised learning, then fine-tuning on transcribed speech.
     \end{alertblock}
     \begin{alertblock}{Whisper}
       whisper has an absurd amount of weakly supervised stuff going on
@@ -112,7 +112,7 @@
     Segment embeddings are averaged over the time-dimension before being used to train fully-connected linear classifiers.
 
     % \begin{alertblock}{Time-averaged Frame Representations}
-      \includegraphics[width=\linewidth]{figures/speechRender.png}
+      \includegraphics[width=\linewidth]{figures/middleChart.png}
     % \end{alertblock}
     % \begin{alertblock}{Probing}
     %   We train linear classifiers to predict manner of articulation and phone label from segment-averaged representations.
@@ -146,10 +146,7 @@
   \begin{block}{Results}
 
     \includegraphics[width=\linewidth]{figures/layerwisePhoneAccuracy.png}\\
-    \includegraphics[width=\linewidth]{figures/layerwiseMoaAccuracy.png}
-
-  \end{block}
-  \begin{block}{Conclusion}
+    \includegraphics[width=\linewidth]{figures/layerwiseMoaAccuracy.png}\\
 
     Our results for wav2vec challenge prior probing studies, suggesting that probing methods 
     appear to be sensitive to encoder pretraining and probe hyperparameters.

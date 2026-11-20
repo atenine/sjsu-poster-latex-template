@@ -85,17 +85,19 @@
 
   \begin{block}{Background}
 
-    Audio encoders are used to generate vectors that encode the information present in one "frame", around 20ms of audio. We choose 
-    to probe three encoders that differ in their training strategies:
+    Audio encoders are used to generate vectors that encode the information present in one "frame", around 20ms of 
+    audio. We choose to probe three encoders that differ in their training strategies:
 
     \begin{alertblock}{Wav2Vec2.0}
-      Self-supervised learning, then fine-tuning on transcribed speech.
+      Wav2vec2 first has unsupervised learning on a large quantity of untranscribed audio, then is fine-tuned on 
+      transcribed speech.
     \end{alertblock}
-    \begin{alertblock}{Whisper}
-      whisper has an absurd amount of weakly supervised stuff going on
+    \begin{alertblock}{Whisper-small and whisper-large-v3}
+      The whisper encoders are trained using a 
     \end{alertblock}
     \begin{alertblock}{Voxtral}
-      voxtral is weird and has a big language model decoder
+      Voxtral shares architectures with whisper-large-v3, but is fine-tuned along with an encoder adapter in order 
+      to be used as input for an LLM.
     \end{alertblock}
 
   \end{block}

@@ -75,8 +75,8 @@
 
   \begin{block}{Abstract}
 
-    Transformer-based audio encoders are commonly used as the first step for many speech processing applications. 
-    However, it is unclear how input linguistic features are used to perform language understanding tasks. 
+    Although audio encoders are used in many speech applicationss, it is unclear how they use linguistics features
+    in their input to perform language understanding tasks. 
     Classifiers (probes) can be used to predict high-level information from encoders’ internal layers, but probing 
     methods are not standardized, making results difficult to compare: what do inconsistencies in probing performance 
     ultimately stem from?
@@ -88,14 +88,18 @@
     Audio encoders are used to generate vectors that encode the information present in one "frame", around 20ms of 
     audio. We choose to probe three encoders that differ in their training strategies:
 
-    \begin{alertblock}{Wav2Vec2.0}
-      Wav2vec2 first has unsupervised learning on a large quantity of untranscribed audio, then is fine-tuned on 
-      transcribed speech.
+    \begin{alertblock}{Wav2Vec2.0 (12 layers, 768 dimensions)}
+      Wav2vec2 first has unsupervised pretraining on untranscribed audio, then is fine-tuned on transcribed speech.
+      This encoder is intended to be fine-tuned for specific applications.
     \end{alertblock}
-    \begin{alertblock}{Whisper-small and whisper-large-v3}
-      The whisper encoders are trained using a 
+    \begin{alertblock}{whisper-small/large-v3 (12/32 layers, 768/1280 dimensions)}
+      The whisper encoders undergo supervised multitask pretraining on transcribed audio along with a dedicated
+      decoder. 
+      % Tasks that the encoder-decoders are trained for include transcription, translation into English, 
+      % speech detection, and language identification. 80-channel log-magnitude mel-spectrogram 25ms windows with
+      % stride of 10ms.
     \end{alertblock}
-    \begin{alertblock}{Voxtral}
+    \begin{alertblock}{Voxtral (32 layers, 1280 dimensions)}
       Voxtral shares architectures with whisper-large-v3, but is fine-tuned along with an encoder adapter in order 
       to be used as input for an LLM.
     \end{alertblock}
@@ -110,8 +114,9 @@
 
   
   \begin{block}{Preprocessing}
-    We pass clips from the TIMIT dataset through our encoders, then split the embeddings at the segment-level. 
-    Segment embeddings are averaged over the time-dimension before being used to train fully-connected linear classifiers.
+    Clips from the TIMIT dataset are split at the segment-level, then passed through encoders. 
+    Segment embeddings are averaged over the time dimension before being used to train fully-connected linear
+    classifiers to predict manner of articulation and phone labels.
 
     % \begin{alertblock}{Time-averaged Frame Representations}
       \includegraphics[width=\linewidth]{figures/middleChart.png}
@@ -122,23 +127,23 @@
     % \end{alertblock}
 
   \end{block}
-  \begin{block}{A table of results, maybe?}
+  % \begin{block}{A table of results, maybe?}
 
-    \begin{table}
-      \centering
-      \begin{tabular}{l r r c}
-        \toprule
-        \textbf{Encoder} & \textbf{layer 0} & \textbf{final layer}\\
-        \midrule
-        Wav2Vec & 13.37 & 384,394 \\
-        Whisper & 2.17 & 1,392 \\
-        Voxtral & 3.14 & 83,742 \\
-        \bottomrule
-      \end{tabular}
-      \caption{A table caption.}
-    \end{table}
+  %   \begin{table}
+  %     \centering
+  %     \begin{tabular}{l r r c}
+  %       \toprule
+  %       \textbf{Encoder} & \textbf{layer 0} & \textbf{final layer}\\
+  %       \midrule
+  %       Wav2Vec & 13.37 & 384,394 \\
+  %       Whisper & 2.17 & 1,392 \\
+  %       Voxtral & 3.14 & 83,742 \\
+  %       \bottomrule
+  %     \end{tabular}
+  %     \caption{A table caption.}
+  %   \end{table}
 
-  \end{block}
+  % \end{block}
 
 \end{column}
 
@@ -151,7 +156,7 @@
     \includegraphics[width=\linewidth]{figures/layerwiseMoaAccuracy.png}\\
 
     Our results for wav2vec challenge prior probing studies, suggesting that probing methods 
-    appear to be sensitive to encoder pretraining and probe hyperparameters.
+    appear to be sensitive to encoder training strategies and probe hyperparameters.
 
   \end{block}
 

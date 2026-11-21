@@ -12,7 +12,7 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta, backgrounds, calc, fit, positioning}
+\usetikzlibrary{arrows.meta, backgrounds, calc, decorations.pathreplacing, fit, positioning}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 \usepackage{anyfontsize}
@@ -246,15 +246,15 @@
   % ---------------------------------------------------------------
   \draw[fill=encoderblue,draw=borderblue,line width=1.1pt]
     (0.45,10.75) rectangle (6.00,11.75);
-  \node[font=\sffamily\fontsize{8}{10}\selectfont]
+  \node[font=\sffamily\fontsize{11}{13}\selectfont]
     at (3.225,11.25) {encoder preprocessor};
 
   \draw[very thick,-{Stealth[length=3mm]}]
-    (6.60,13.70) .. controls (5.80,12.95) and (3.35,12.25)
-    .. (2.50,11.78);
+    (6.60,13.35) .. controls (5.80,12.95) and (3.35,12.25)
+    .. (2.50,11.75);
   \draw[very thick,-{Stealth[length=3mm]}]
-    (9.18,13.70) .. controls (8.00,12.95) and (5.05,12.25)
-    .. (4.00,11.78);
+    (9.18,13.35) .. controls (8.00,12.95) and (5.05,12.25)
+    .. (4.00,11.75);
   \draw[very thick,-{Stealth[length=3mm]}]
     (3.225,10.72) -- (3.225,10.05);
 
@@ -263,97 +263,102 @@
   % ---------------------------------------------------------------
 \begin{scope}[yshift=-6mm]
   \draw[fill=encoderblue,draw=borderblue,line width=1.1pt]
-    (0.10,1.72) rectangle (6.12,10.62);
-  \node[font=\sffamily\fontsize{14}{16}\selectfont] at (3.11,10.12) {encoder};
+    (0.10,1.15) rectangle (6.12,10.62);
+  \node[font=\sffamily\fontsize{14}{16}\selectfont] at (3.11,10.25) {encoder};
   \node[font=\fontsize{7}{8}\selectfont,align=center,text width=5.7cm] at (3.11,9.78)
     {(wav2vec/whisper-small/whisper-large/voxtral)};
 
-  \fill[white] (0.27,8.50) rectangle (5.95,9.55);
+  \fill[white] (0.27,8.575) rectangle (5.95,9.475);
   \node[font=\rmfamily\fontsize{10}{12}\selectfont] at (3.11,9.025) {transformer layer 1};
 
-  \fill[embedgray] (0.30,7.35) rectangle (5.92,8.05);
-  \fill[orangehi] (3.25,7.35) rectangle (3.53,8.05);
-  \fill[orangehi] (4.50,7.35) rectangle (4.65,8.05);
-  \node[font=\sffamily\fontsize{7}{8}\selectfont] at (3.11,7.70) {(time $\times$ encoder dimension)};
+  \fill[embedgray] (0.30,7.725) rectangle (5.92,8.275);
+  \fill[orangehi] (3.25,7.725) rectangle (3.53,8.275);
+  \fill[orangehi] (4.50,7.725) rectangle (4.65,8.275);
+  \node[font=\sffamily\fontsize{7}{8}\selectfont] at (3.11,8.00) {(time $\times$ encoder dimension)};
 
-  \fill[white] (0.27,5.90) rectangle (5.95,6.95);
+  \fill[white] (0.27,5.975) rectangle (5.95,6.875);
   \node[font=\rmfamily\fontsize{10}{12}\selectfont] at (3.11,6.425) {intermediate layer};
 
-  \fill[embedgray] (0.30,4.75) rectangle (5.92,5.45);
-  \fill[orangehi] (3.25,4.75) rectangle (3.53,5.45);
-  \fill[orangehi] (4.50,4.75) rectangle (4.65,5.45);
-  \node[font=\sffamily\fontsize{7}{8}\selectfont] at (3.11,5.10) {(time $\times$ encoder dimension)};
+  \fill[embedgray] (0.30,4.975) rectangle (5.92,5.525);
+  \fill[orangehi] (3.25,4.975) rectangle (3.53,5.525);
+  \fill[orangehi] (4.50,4.975) rectangle (4.65,5.525);
+  \node[font=\sffamily\fontsize{7}{8}\selectfont] at (3.11,5.25) {(time $\times$ encoder dimension)};
 
-  \fill[white] (0.27,3.10) rectangle (5.95,4.15);
+  \fill[white] (0.27,3.175) rectangle (5.95,4.075);
   \node[font=\rmfamily\fontsize{10}{12}\selectfont] at (3.11,3.625) {transformer final layer};
 
-  \fill[embedgray] (0.30,1.95) rectangle (5.92,2.65);
-  \fill[orangehi] (3.28,1.95) rectangle (3.57,2.65);
-  \fill[orangehi] (4.53,1.95) rectangle (4.68,2.65);
-  \node[font=\sffamily\fontsize{7}{8}\selectfont] at (3.11,2.30) {(time $\times$ encoder dimension)};
+  \fill[embedgray] (0.30,2.225) rectangle (5.92,2.775);
+  \fill[orangehi] (3.28,2.225) rectangle (3.57,2.775);
+  \fill[orangehi] (4.53,2.225) rectangle (4.68,2.775);
+  \node[font=\sffamily\fontsize{7}{8}\selectfont] at (3.11,2.50) {(time $\times$ encoder dimension)};
 
-  \draw[thick,-{Stealth[length=2.6mm]}] (3.11,8.50) -- (3.11,8.05);
-  \draw[thick,-{Stealth[length=2.6mm]}] (3.11,7.35) -- (3.11,6.95);
-  \draw[thick,-{Stealth[length=2.6mm]}] (3.11,5.90) -- (3.11,5.45);
-  \draw[thick,-{Stealth[length=2.6mm]}] (3.11,4.75) -- (3.11,4.15);
-  \draw[thick,-{Stealth[length=2.6mm]}] (3.11,3.10) -- (3.11,2.65);
+  \node[font=\fontsize{12}{14}\selectfont] at (4.25,7.40) {$\vdots$};
+  \node[font=\fontsize{12}{14}\selectfont] at (4.25,4.625) {$\vdots$};
+
+  \draw[thick,-{Stealth[length=2.6mm]}] (3.11,8.575) -- (3.11,8.275);
+  \draw[thick,-{Stealth[length=2.6mm]}] (3.11,7.725) -- (3.11,6.875);
+  \draw[thick,-{Stealth[length=2.6mm]}] (3.11,5.975) -- (3.11,5.525);
+  \draw[thick,-{Stealth[length=2.6mm]}] (3.11,4.975) -- (3.11,4.075);
+  \draw[thick,-{Stealth[length=2.6mm]}] (3.11,3.175) -- (3.11,2.775);
 
   % ---------------------------------------------------------------
   % Time-averaging embeddings
   % ---------------------------------------------------------------
-  \draw[fill=goldlight,draw=gold,line width=1.1pt]
-    (6.20,1.65) rectangle (8.35,10.58);
-  \node[font=\sffamily\fontsize{7}{8}\selectfont,align=center,text width=2.0cm] at (7.275,10.15)
-    {time-averaged\\embeddings};
-  \node[font=\sffamily\fontsize{6}{7}\selectfont,align=center,text width=2.0cm] at (7.275,8.90)
-    {(1 $\times$\\encoder\\dimension)};
-  \foreach \yy in {7.25,4.75,1.95} {
-    \fill[gold] (7.16,\yy) rectangle (7.47,\yy+.88);
-  }
+  \draw[fill=goldlight,draw=gold,dotted,line width=1.1pt]
+    (6.385,1.15) rectangle (8.535,10.58);
+  \draw[line width=.8pt,decorate,decoration={brace,amplitude=6pt}]
+    (6.385,10.88) -- (8.535,10.88);
+  \node[font=\sffamily\fontsize{10}{12}\selectfont,align=center,text width=3.0cm] at (7.46,12.00)
+    {time-averaged\\embedding};
+  \node[font=\sffamily\fontsize{5}{6}\selectfont,align=center] at (7.46,11.45)
+    {(1 $\times$ encoder dimension)};
+  \fill[gold] (7.345,7.56) rectangle (7.655,8.44);
+  \fill[gold] (7.345,4.81) rectangle (7.655,5.69);
+  \fill[gold] (7.345,2.06) rectangle (7.655,2.94);
+  \node[font=\fontsize{12}{14}\selectfont] at (7.50,6.725) {$\vdots$};
+  \node[font=\fontsize{12}{14}\selectfont] at (7.50,3.975) {$\vdots$};
 
   % Arrows explicitly showing temporal averaging of internal states.
   \draw[very thick,-{Stealth[length=3mm]}]
-    (5.95,7.70) .. controls (6.35,7.70) and (6.62,7.69)
-    .. (7.16,7.69);
+    (5.95,8.00) -- (7.345,8.00);
   \draw[very thick,-{Stealth[length=3mm]}]
-    (5.95,5.10) .. controls (6.35,5.10) and (6.62,5.19)
-    .. (7.16,5.19);
+    (5.95,5.25) -- (7.345,5.25);
   \draw[very thick,-{Stealth[length=3mm]}]
-    (5.95,2.30) .. controls (6.35,2.30) and (6.62,2.39)
-    .. (7.16,2.39);
+    (5.95,2.50) -- (7.345,2.50);
 
   % ---------------------------------------------------------------
   % Probe heads and output boxes
   % ---------------------------------------------------------------
-  \draw[draw=black!60,line width=.6pt]
-    (8.58,1.68) rectangle (11.78,10.05);
+  \draw[draw=black!60,dotted,line width=.6pt]
+    (8.80,1.15) rectangle (11.55,10.05);
   \node[font=\sffamily\bfseries\fontsize{7}{8}\selectfont,align=center,text width=2.9cm]
-    at (10.18,9.48) {Probes\\(200 ReLU)};
-  \foreach \yy/\label/\output in {8.05/MOA probe/moa labels,7.00/phone probe/phone labels,
-                                  5.25/MOA probe/moa labels,4.20/phone probe/phone labels,
-                                  2.82/MOA probe/moa labels,1.77/phone probe/phone labels} {
-    \fill[probe] (8.78,\yy) rectangle (11.78,\yy+.94);
-    \node[font=\sffamily\fontsize{8}{10}\selectfont,text=white,anchor=west]
-      at (8.98,\yy+.47) {\label};
+    at (10.18,9.48) {Probes\\(200 linear neurons)};
+  \foreach \yy/\label/\output in {8.12/MOA probe/MOA labels,6.94/phone probe/phone labels,
+                                  5.37/MOA probe/MOA labels,4.19/phone probe/phone labels,
+                                  2.62/MOA probe/MOA labels,1.44/phone probe/phone labels} {
+    \fill[probe] (9.24,\yy) rectangle (11.14,\yy+.94);
+    \node[font=\sffamily\fontsize{8}{10}\selectfont,text=white,align=center]
+      at (10.19,\yy+.47) {\label};
     \draw[line width=.8pt] (11.98,\yy) rectangle (13.55,\yy+.94);
     \node[font=\sffamily\fontsize{7}{8}\selectfont,align=center,text width=1.45cm]
       at (12.765,\yy+.47) {\output};
     \draw[thick,-{Stealth[length=2.6mm]}]
-      (11.78,\yy+.47) -- (11.98,\yy+.47);
+      (11.14,\yy+.47) -- (11.98,\yy+.47);
   }
+
+  \node[font=\fontsize{12}{14}\selectfont] at (10.18,6.725) {$\vdots$};
+  \node[font=\fontsize{12}{14}\selectfont] at (10.18,3.975) {$\vdots$};
 
   % Each frame-averaged embedding feeds its corresponding probe pair.
   \foreach \yy/\ya/\yb in {
-    7.69/8.52/7.47,
-    5.19/5.72/4.67,
-    2.39/3.29/2.24
+    8.00/8.59/7.41,
+    5.25/5.84/4.66,
+    2.50/3.09/1.91
   } {
-    \draw[thick,-{Stealth[length=2.6mm]}]
-      (7.47,\yy) .. controls (7.95,\yy) and (8.15,\ya)
-      .. (8.78,\ya);
-    \draw[thick,-{Stealth[length=2.6mm]}]
-      (7.47,\yy) .. controls (7.95,\yy) and (8.15,\yb)
-      .. (8.78,\yb);
+    \draw[thick] (7.655,\yy) -- (8.67,\yy);
+    \draw[thick] (8.67,\ya) -- (8.67,\yb);
+    \draw[thick,-{Stealth[length=2.6mm]}] (8.67,\ya) -- (9.24,\ya);
+    \draw[thick,-{Stealth[length=2.6mm]}] (8.67,\yb) -- (9.24,\yb);
   }
 
 \end{scope}

@@ -250,7 +250,11 @@
     at (3.225,11.25) {encoder preprocessor};
 
   \draw[very thick,-{Stealth[length=3mm]}]
-    (3.225,12.15) -- (3.225,11.78);
+    (6.60,13.70) .. controls (5.80,12.95) and (3.35,12.25)
+    .. (2.50,11.78);
+  \draw[very thick,-{Stealth[length=3mm]}]
+    (9.18,13.70) .. controls (8.00,12.95) and (5.05,12.25)
+    .. (4.00,11.78);
   \draw[very thick,-{Stealth[length=3mm]}]
     (3.225,10.72) -- (3.225,10.05);
 
@@ -273,14 +277,12 @@
   \node[font=\sffamily\fontsize{7}{8}\selectfont] at (3.11,7.70) {(time $\times$ encoder dimension)};
 
   \fill[white] (0.27,5.90) rectangle (5.95,6.95);
-  \node[font=\rmfamily\fontsize{10}{12}\selectfont] at (3.11,6.425) {transformer layer 2};
+  \node[font=\rmfamily\fontsize{10}{12}\selectfont] at (3.11,6.425) {intermediate layer};
 
   \fill[embedgray] (0.30,4.75) rectangle (5.92,5.45);
   \fill[orangehi] (3.25,4.75) rectangle (3.53,5.45);
   \fill[orangehi] (4.50,4.75) rectangle (4.65,5.45);
   \node[font=\sffamily\fontsize{7}{8}\selectfont] at (3.11,5.10) {(time $\times$ encoder dimension)};
-
-  \node[font=\sffamily\fontsize{7}{8}\selectfont] at (5.45,4.45) {$\vdots$};
 
   \fill[white] (0.27,3.10) rectangle (5.95,4.15);
   \node[font=\rmfamily\fontsize{10}{12}\selectfont] at (3.11,3.625) {transformer final layer};
@@ -323,6 +325,10 @@
   % ---------------------------------------------------------------
   % Probe heads and output boxes
   % ---------------------------------------------------------------
+  \draw[draw=black!60,line width=.6pt]
+    (8.58,1.68) rectangle (11.78,10.05);
+  \node[font=\sffamily\bfseries\fontsize{7}{8}\selectfont,align=center,text width=2.9cm]
+    at (10.18,9.48) {Probes\\(200 ReLU)};
   \foreach \yy/\label/\output in {8.05/MOA probe/moa labels,7.00/phone probe/phone labels,
                                   5.25/MOA probe/moa labels,4.20/phone probe/phone labels,
                                   2.82/MOA probe/moa labels,1.77/phone probe/phone labels} {

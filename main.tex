@@ -238,9 +238,7 @@
   % ---------------------------------------------------------------
   % Audio waveform
   % ---------------------------------------------------------------
-  \node[font=\sffamily\fontsize{8}{10}\selectfont,align=center,text width=12.3cm] at (6.50,16.75)
-    {\textcolor{blue!65!black}{audio:}\\ ``ambidextrous pickpockets accomplish more''};
-  \node[anchor=north] at (6.50,16.48)
+  \node[anchor=north] at (6.50,17.20)
     {\includegraphics[width=12.3cm]{figures/speechRender.png}};
 
   % ---------------------------------------------------------------
@@ -266,31 +264,37 @@
   \node[font=\fontsize{7}{8}\selectfont,align=center,text width=5.7cm] at (3.11,9.78)
     {(wav2vec/whisper-small/whisper-large/voxtral)};
 
-  \fill[white] (0.27,8.00) rectangle (5.95,9.46);
-  \node[font=\rmfamily\fontsize{10}{12}\selectfont] at (3.11,8.72) {transformer layer 1};
+  \fill[white] (0.27,8.50) rectangle (5.95,9.55);
+  \node[font=\rmfamily\fontsize{10}{12}\selectfont] at (3.11,9.025) {transformer layer 1};
 
-  \fill[embedgray] (0.30,6.65) rectangle (5.92,7.71);
-  \fill[orangehi] (3.25,6.65) rectangle (3.53,7.71);
-  \fill[orangehi] (4.50,6.65) rectangle (4.65,7.71);
-  \node[font=\sffamily\fontsize{7}{8}\selectfont] at (3.11,7.18) {(time $\times$ encoder dimension)};
+  \fill[embedgray] (0.30,7.35) rectangle (5.92,8.05);
+  \fill[orangehi] (3.25,7.35) rectangle (3.53,8.05);
+  \fill[orangehi] (4.50,7.35) rectangle (4.65,8.05);
+  \node[font=\sffamily\fontsize{7}{8}\selectfont] at (3.11,7.70) {(time $\times$ encoder dimension)};
 
-  \fill[white] (0.27,5.42) rectangle (5.95,6.84);
-  \node[font=\rmfamily\fontsize{10}{12}\selectfont] at (3.11,6.13) {transformer layer 2};
+  \fill[white] (0.27,5.90) rectangle (5.95,6.95);
+  \node[font=\rmfamily\fontsize{10}{12}\selectfont] at (3.11,6.425) {transformer layer 2};
 
-  \fill[embedgray] (0.30,4.20) rectangle (5.92,5.22);
-  \fill[orangehi] (3.25,4.20) rectangle (3.53,5.22);
-  \fill[orangehi] (4.50,4.20) rectangle (4.65,5.22);
-  \node[font=\sffamily\fontsize{7}{8}\selectfont] at (3.11,4.71) {(time $\times$ encoder dimension)};
+  \fill[embedgray] (0.30,4.75) rectangle (5.92,5.45);
+  \fill[orangehi] (3.25,4.75) rectangle (3.53,5.45);
+  \fill[orangehi] (4.50,4.75) rectangle (4.65,5.45);
+  \node[font=\sffamily\fontsize{7}{8}\selectfont] at (3.11,5.10) {(time $\times$ encoder dimension)};
 
-  \node[font=\sffamily\fontsize{7}{8}\selectfont] at (3.11,4.04) {$\vdots$};
+  \node[font=\sffamily\fontsize{7}{8}\selectfont] at (5.45,4.45) {$\vdots$};
 
-  \fill[white] (0.27,2.85) rectangle (5.95,3.88);
-  \node[font=\rmfamily\fontsize{10}{12}\selectfont] at (3.11,3.36) {transformer final layer};
+  \fill[white] (0.27,3.10) rectangle (5.95,4.15);
+  \node[font=\rmfamily\fontsize{10}{12}\selectfont] at (3.11,3.625) {transformer final layer};
 
-  \fill[embedgray] (0.30,1.88) rectangle (5.92,2.65);
-  \fill[orangehi] (3.28,1.88) rectangle (3.57,2.65);
-  \fill[orangehi] (4.53,1.88) rectangle (4.68,2.65);
-  \node[font=\sffamily\fontsize{7}{8}\selectfont] at (3.11,2.26) {(time $\times$ encoder dimension)};
+  \fill[embedgray] (0.30,1.95) rectangle (5.92,2.65);
+  \fill[orangehi] (3.28,1.95) rectangle (3.57,2.65);
+  \fill[orangehi] (4.53,1.95) rectangle (4.68,2.65);
+  \node[font=\sffamily\fontsize{7}{8}\selectfont] at (3.11,2.30) {(time $\times$ encoder dimension)};
+
+  \draw[thick,-{Stealth[length=2.6mm]}] (3.11,8.50) -- (3.11,8.05);
+  \draw[thick,-{Stealth[length=2.6mm]}] (3.11,7.35) -- (3.11,6.95);
+  \draw[thick,-{Stealth[length=2.6mm]}] (3.11,5.90) -- (3.11,5.45);
+  \draw[thick,-{Stealth[length=2.6mm]}] (3.11,4.75) -- (3.11,4.15);
+  \draw[thick,-{Stealth[length=2.6mm]}] (3.11,3.10) -- (3.11,2.65);
 
   % ---------------------------------------------------------------
   % Time-averaging embeddings
@@ -301,20 +305,20 @@
     {time-averaged\\embeddings};
   \node[font=\sffamily\fontsize{6}{7}\selectfont,align=center,text width=2.0cm] at (7.275,8.90)
     {(1 $\times$\\encoder\\dimension)};
-  \foreach \yy in {7.40,5.15,2.05} {
+  \foreach \yy in {7.25,4.75,1.95} {
     \fill[gold] (7.16,\yy) rectangle (7.47,\yy+.88);
   }
 
   % Arrows explicitly showing temporal averaging of internal states.
   \draw[very thick,-{Stealth[length=3mm]}]
-    (5.95,7.18) .. controls (6.35,7.18) and (6.62,7.84)
-    .. (7.16,7.84);
+    (5.95,7.70) .. controls (6.35,7.70) and (6.62,7.69)
+    .. (7.16,7.69);
   \draw[very thick,-{Stealth[length=3mm]}]
-    (5.95,4.71) .. controls (6.35,4.71) and (6.62,5.59)
-    .. (7.16,5.59);
+    (5.95,5.10) .. controls (6.35,5.10) and (6.62,5.19)
+    .. (7.16,5.19);
   \draw[very thick,-{Stealth[length=3mm]}]
-    (5.95,2.26) .. controls (6.35,2.26) and (6.62,2.49)
-    .. (7.16,2.49);
+    (5.95,2.30) .. controls (6.35,2.30) and (6.62,2.39)
+    .. (7.16,2.39);
 
   % ---------------------------------------------------------------
   % Probe heads and output boxes
@@ -334,9 +338,9 @@
 
   % Each frame-averaged embedding feeds its corresponding probe pair.
   \foreach \yy/\ya/\yb in {
-    7.84/8.52/7.47,
-    5.59/5.72/4.67,
-    2.49/3.29/2.24
+    7.69/8.52/7.47,
+    5.19/5.72/4.67,
+    2.39/3.29/2.24
   } {
     \draw[thick,-{Stealth[length=2.6mm]}]
       (7.47,\yy) .. controls (7.95,\yy) and (8.15,\ya)
@@ -346,9 +350,6 @@
       .. (8.78,\yb);
   }
 
-  % Dashed grouping around the probe heads.
-  \draw[dashed,line width=.9pt]
-    (8.58,1.58) rectangle (13.68,9.25);
 \end{scope}
 
 \end{tikzpicture}

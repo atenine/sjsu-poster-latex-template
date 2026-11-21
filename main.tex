@@ -79,8 +79,15 @@
   enc-arrow/.style={-{Latex[length=2.4mm]}, line width=0.7pt},
   enc-io/.style={
     draw=encBlue, fill=white, very thick, rounded corners=1pt,
-    align=center, minimum width=25mm, minimum height=12mm,
-    font=\small
+    align=center, text width=79mm, minimum width=83mm,
+    minimum height=34mm, inner sep=1mm,
+    font=\fontsize{34}{39}\selectfont
+  },
+  enc-stage/.style={
+    draw=encBlue, fill=encLightBlue, very thick, rounded corners=1pt,
+    align=center, text width=79mm, minimum width=83mm,
+    minimum height=34mm, inner sep=1mm,
+    font=\fontsize{34}{39}\selectfont
   },
   enc-prep/.style={
     draw=encBlue, fill=encLightBlue, very thick, rounded corners=1pt,
@@ -98,12 +105,15 @@
   },
   enc-orange/.style={
     draw=encOrange, fill=encLightOrange, very thick, rounded corners=1pt,
-    align=center, minimum width=32mm, minimum height=14mm,
-    font=\small
+    align=center, text width=79mm, minimum width=83mm,
+    minimum height=34mm, inner sep=1mm,
+    font=\fontsize{34}{39}\selectfont
   },
   enc-context/.style={
     draw=black!55, fill=black!3, dashed, thick, rounded corners=1pt,
-    align=center, inner sep=3mm
+    align=center, text width=79mm, minimum width=83mm,
+    minimum height=34mm, inner sep=1mm,
+    font=\fontsize{34}{39}\selectfont
   },
   enc-context-frame/.style={
     draw=black!55, fill=none, dashed, thick, rounded corners=1pt,
@@ -112,7 +122,7 @@
   enc-output/.style={
     draw=encBlue, fill=encBlue!10, very thick, rounded corners=1pt,
     align=center, minimum width=28mm, minimum height=13mm,
-    font=\small
+    font=\fontsize{8}{10}\selectfont
   },
   enc-label/.style={font=\bfseries\small, align=center},
   enc-note/.style={font=\scriptsize, align=center}
@@ -135,8 +145,8 @@
     Although audio encoders are used in many speech applications, it is unclear how they use linguistic features
     in their input to perform language understanding tasks. 
     Classifiers (probes) can be used to predict high-level information from encoders’ internal layers, but probing 
-    methods are not standardized, making results difficult to compare: what do inconsistencies in probing performance 
-    ultimately stem from?
+    methods are not standardized, making results difficult to compare. In this experiment, we investigate if probe
+    performance depends on encoder pretraining.
 
   \end{block}
 
@@ -148,25 +158,21 @@
     \begin{alertblock}{Wav2Vec2.0 (12 layers, 768 dimensions)}
       Wav2vec2 first has unsupervised pretraining on untranscribed audio, then is fine-tuned on transcribed speech.
       This encoder is intended to be fine-tuned for specific applications.
-      \resizebox{\linewidth}{!}{%
-      \begin{tikzpicture}[node distance=7mm and 8mm]
-        \node[enc-io] (wv-input) {normalized raw waveform\\16 kHz};
-        \node[enc-frame, right=of wv-input, minimum width=55mm,
-          minimum height=35mm, align=center] (wv-feature)
-          {7 convolutional layers\\total stride $=320$};
-        \node[enc-output, right=of wv-feature] (wv-states)
-          {$z_{1:T}$\\$d=512$};
-        \node[enc-frame, right=of wv-states, minimum width=55mm,
-          minimum height=35mm, align=center] (wv-context)
-          {12 Transformer blocks\\$d=768$, 8 heads};
-        \node[enc-output, right=of wv-context] (wv-output)
-          {contextualized\\encoder states};
-        \draw[enc-arrow] (wv-input) -- (wv-feature);
-        \draw[enc-arrow] (wv-feature) -- (wv-states);
-        \draw[enc-arrow] (wv-states) -- (wv-context);
-        \draw[enc-arrow] (wv-context) -- (wv-output);
-      \end{tikzpicture}
-      }
+      \par\noindent\makebox[\linewidth][c]{\resizebox{\linewidth}{!}{%
+      \begin{tikzpicture}[node distance=5mm and 5mm]
+  \node[enc-io] (wvin) {audio};
+  \node[enc-stage, right=of wvin] (wvenc)
+    {convolutional\\network};
+  \node[enc-stage, right=of wvenc] (wvcontext)
+    {Transformer\\blocks};
+  \node[enc-context, right=of wvcontext] (wvdec)
+    {generic\\decoder};
+
+  \draw[enc-arrow] (wvin) -- (wvenc);
+  \draw[enc-arrow] (wvenc) -- (wvcontext);
+  \draw[enc-arrow] (wvcontext) -- (wvdec);
+\end{tikzpicture}
+      }}\par
     \end{alertblock}
     \begin{alertblock}{Whisper-small/large-v3 (12/32 layers, 768/1280 dimensions)}
       The Whisper encoders undergo supervised multitask pretraining on transcribed audio along with a dedicated
@@ -174,127 +180,40 @@
       % Tasks that the encoder-decoders are trained for include transcription, translation into English, 
       % speech detection, and language identification. 80-channel log-magnitude mel-spectrogram 25ms windows with
       % stride of 10ms.
-      \resizebox{\linewidth}{!}{%
-      \begin{tikzpicture}[node distance=7mm and 8mm]
-  \node[enc-io] (whin) {audio waveform\\16 kHz};
+      \par\noindent\makebox[\linewidth][c]{\resizebox{\linewidth}{!}{%
+      \begin{tikzpicture}[node distance=5mm and 5mm]
+  \node[enc-io] (whin) {log-mel\\spectrogram};
+  \node[enc-stage, right=of whin] (whconv)
+    {convolutional\\network};
+  \node[enc-stage, right=of whconv] (whenc)
+    {Transformer\\blocks};
+  \node[enc-context, right=of whenc] (whdec)
+    {multitask\\decoder};
 
-  \node[enc-prep, right=of whin] (whmel)
-    {80-bin log-Mel\\25 ms window, 10 ms stride\\$3000$ frames for 30 s};
-
-  \node[enc-layer, right=of whmel] (whc1)
-    {Conv1D $k=3$, $s=1$\\$+$ GELU};
-
-  \node[enc-layer, below=0.8mm of whc1] (whc2)
-    {Conv1D $k=3$, $s=2$\\$+$ GELU};
-
-  \begin{pgfonlayer}{background}
-    \node[enc-frame, fit=(whc1)(whc2),
-      label={[enc-label]above:Convolutional stem}] (whstem) {};
-  \end{pgfonlayer}
-
-  \node[enc-layer, right=of whstem, minimum width=33mm] (whpos)
-    {add sinusoidal\\positional embeddings};
-
-  \node[enc-layer, right=of whpos, minimum width=38mm] (wht1)
-    {Transformer block 1\\pre-activation residual};
-
-  \node[enc-layer, right=of wht1, minimum width=16mm] (whdots)
-    {$\vdots$};
-
-  \node[enc-layer, right=of whdots, minimum width=38mm] (whtn)
-    {Transformer block $N$\\MHSA $+$ MLP};
-
-  \node[enc-layer, right=of whtn, minimum width=27mm] (whln)
-    {final\\LayerNorm};
-
-  \node[enc-output, right=of whln] (whout)
-    {Whisper encoder states\\$H\in\mathbb{R}^{T/2\times d}$};
-
-  \node[enc-context, right=of whout,
-    minimum width=37mm, minimum height=18mm] (whdec)
-    {Transformer decoder\\causal self-attention\\cross-attention to $H$\\next-token text prediction};
-
-  \begin{pgfonlayer}{background}
-    \node[enc-context-frame, fit=(whdec),
-      label={[enc-label]above:Whisper ASR context}] (whctx) {};
-  \end{pgfonlayer}
-
-  \draw[enc-arrow] (whin) -- (whmel);
-  \draw[enc-arrow] (whmel) -- (whstem);
-  \draw[enc-arrow] (whstem) -- (whpos);
-  \draw[enc-arrow] (whpos) -- (wht1);
-  \draw[enc-arrow] (wht1) -- (whdots);
-  \draw[enc-arrow] (whdots) -- (whtn);
-  \draw[enc-arrow] (whtn) -- (whln);
-  \draw[enc-arrow] (whln) -- (whout);
-  \draw[enc-arrow] (whout) -- (whdec);
-
-  \node[enc-note, below=4mm of whstem.south]
-    {$T=1500$ after the $2\times$ temporal reduction for a 30-s input};
-
-  \node[enc-note, below=4mm of whtn.south]
-    {$N=12,d=768$ (small)\quad or\quad $N=32,d=1280$ (large)};
+  \draw[enc-arrow] (whin) -- (whconv);
+  \draw[enc-arrow] (whconv) -- (whenc);
+  \draw[enc-arrow] (whenc) -- (whdec);
 \end{tikzpicture}
-      }
+      }}\par
     \end{alertblock}
     \begin{alertblock}{Voxtral (32 layers, 1280 dimensions)}
       Voxtral shares an architecture with Whisper-large-v3, but is fine-tuned along with an encoder adapter in order
       to be used as input for an LLM.
-      \resizebox{\linewidth}{!}{%
-      \begin{tikzpicture}[node distance=7mm and 8mm]
-  \node[enc-io] (vxin)
-    {raw audio\\arbitrary duration};
+      \par\noindent\makebox[\linewidth][c]{\resizebox{\linewidth}{!}{%
+      \begin{tikzpicture}[node distance=5mm and 5mm]
+  \node[enc-io] (vxin) {log-mel\\spectrogram};
+  \node[enc-stage, right=of vxin] (vxenc)
+    {whisper L-v3\\encoder};
+  \node[enc-orange, right=of vxenc] (vxadapt)
+    {audio\\adapter};
+  \node[enc-context, right=of vxadapt] (vxllm)
+    {multimodal\\LLM};
 
-  \node[enc-prep, right=of vxin] (vxmel)
-    {128-bin log-Mel\\hop length 160};
-
-  \node[enc-prep, right=of vxmel, minimum width=35mm] (vxchunk)
-    {pad to next multiple of 30 s\\independent 30-s chunks\\reset position per chunk};
-
-  \node[enc-layer, right=of vxchunk] (vxc1)
-    {Conv1D stem\\$+$ GELU, $\times2$\\temporal stride $2$};
-
-  \node[enc-layer, below=0.8mm of vxc1] (vxpos)
-    {sinusoidal\\positional embeddings};
-
-  \node[enc-layer, below=0.8mm of vxpos] (vxt)
-    {32 bidirectional Transformer blocks\\Whisper large-v3, $d=1280$};
-
-  \node[enc-layer, below=0.8mm of vxt] (vxln)
-    {final LayerNorm\\50 Hz audio embeddings};
-
-  \begin{pgfonlayer}{background}
-    \node[enc-frame, fit=(vxc1)(vxln),
-      label={[enc-label]above:Audio encoder, applied per chunk}] (vxenc) {};
-  \end{pgfonlayer}
-
-  \node[enc-orange, right=of vxenc, minimum width=35mm] (vxcat)
-    {concatenate chunk embeddings\\unified representation of full audio};
-
-  \node[enc-context, right=of vxcat,
-    minimum width=36mm, minimum height=18mm] (vxadapt)
-    {audio-language adapter\\MLP, $4\times$ temporal downsampling\\50 Hz $\rightarrow$ 12.5 Hz};
-
-  \node[enc-context, right=of vxadapt,
-    minimum width=35mm, minimum height=18mm] (vxllm)
-    {multimodal LLM decoder\\audio embeddings $+$ text context};
-
-  \begin{pgfonlayer}{background}
-    \node[enc-context-frame, fit=(vxadapt)(vxllm),
-      label={[enc-label]above:Voxtral audio-to-language context}] (vxcontext) {};
-  \end{pgfonlayer}
-
-  \draw[enc-arrow] (vxin) -- (vxmel);
-  \draw[enc-arrow] (vxmel) -- (vxchunk);
-  \draw[enc-arrow] (vxchunk) -- (vxenc);
-  \draw[enc-arrow] (vxenc) -- (vxcat);
-  \draw[enc-arrow] (vxcat) -- (vxadapt);
+  \draw[enc-arrow] (vxin) -- (vxenc);
+  \draw[enc-arrow] (vxenc) -- (vxadapt);
   \draw[enc-arrow] (vxadapt) -- (vxllm);
-
-  \node[enc-note, below=4mm of vxenc.south]
-    {same encoder weights for all chunks; chunk outputs are concatenated only after encoding};
 \end{tikzpicture}
-      }
+      }}\par
     \end{alertblock}
 
   \end{block}
@@ -319,27 +238,28 @@
   % ---------------------------------------------------------------
   % Audio waveform
   % ---------------------------------------------------------------
-  \node[font=\sffamily\fontsize{8}{10}\selectfont,align=center,text width=12.3cm] at (6.50,16.05)
+  \node[font=\sffamily\fontsize{8}{10}\selectfont,align=center,text width=12.3cm] at (6.50,16.75)
     {\textcolor{blue!65!black}{audio:}\\ ``ambidextrous pickpockets accomplish more''};
-  \node[anchor=north] at (6.50,15.78)
+  \node[anchor=north] at (6.50,16.48)
     {\includegraphics[width=12.3cm]{figures/speechRender.png}};
 
   % ---------------------------------------------------------------
   % Audio preprocessing and encoder flow
   % ---------------------------------------------------------------
   \draw[fill=encoderblue,draw=borderblue,line width=1.1pt]
-    (0.45,11.05) rectangle (6.00,12.05);
+    (0.45,10.75) rectangle (6.00,11.75);
   \node[font=\sffamily\fontsize{8}{10}\selectfont]
-    at (3.225,11.55) {encoder preprocessor};
+    at (3.225,11.25) {encoder preprocessor};
 
   \draw[very thick,-{Stealth[length=3mm]}]
-    (3.225,12.95) -- (3.225,12.08);
+    (3.225,12.15) -- (3.225,11.78);
   \draw[very thick,-{Stealth[length=3mm]}]
-    (3.225,11.02) -- (3.225,10.68);
+    (3.225,10.72) -- (3.225,10.05);
 
   % ---------------------------------------------------------------
   % Encoder stack
   % ---------------------------------------------------------------
+\begin{scope}[yshift=-6mm]
   \draw[fill=encoderblue,draw=borderblue,line width=1.1pt]
     (0.10,1.72) rectangle (6.12,10.62);
   \node[font=\sffamily\fontsize{14}{16}\selectfont] at (3.11,10.12) {encoder};
@@ -362,7 +282,7 @@
   \fill[orangehi] (4.50,4.20) rectangle (4.65,5.22);
   \node[font=\sffamily\fontsize{7}{8}\selectfont] at (3.11,4.71) {(time $\times$ encoder dimension)};
 
-  \node[font=\sffamily\Large] at (3.11,3.67) {$\vdots$};
+  \node[font=\sffamily\fontsize{7}{8}\selectfont] at (3.11,4.04) {$\vdots$};
 
   \fill[white] (0.27,2.85) rectangle (5.95,3.88);
   \node[font=\rmfamily\fontsize{10}{12}\selectfont] at (3.11,3.36) {transformer final layer};
@@ -376,53 +296,60 @@
   % Time-averaging embeddings
   % ---------------------------------------------------------------
   \draw[fill=goldlight,draw=gold,line width=1.1pt]
-    (6.30,1.65) rectangle (7.95,10.58);
-  \node[font=\sffamily\fontsize{6}{7}\selectfont,align=center,text width=1.5cm] at (7.15,10.05)
-    {time-\\averaged\\embeddings};
-  \foreach \yy in {8.20,5.15,2.05} {
-    \fill[gold] (7.03,\yy) rectangle (7.34,\yy+.88);
+    (6.20,1.65) rectangle (8.35,10.58);
+  \node[font=\sffamily\fontsize{7}{8}\selectfont,align=center,text width=2.0cm] at (7.275,10.15)
+    {time-averaged\\embeddings};
+  \node[font=\sffamily\fontsize{6}{7}\selectfont,align=center,text width=2.0cm] at (7.275,8.90)
+    {(1 $\times$\\encoder\\dimension)};
+  \foreach \yy in {7.40,5.15,2.05} {
+    \fill[gold] (7.16,\yy) rectangle (7.47,\yy+.88);
   }
 
   % Arrows explicitly showing temporal averaging of internal states.
   \draw[very thick,-{Stealth[length=3mm]}]
-    (5.95,7.18) .. controls (6.35,7.18) and (6.62,8.64)
-    .. (7.03,8.64);
+    (5.95,7.18) .. controls (6.35,7.18) and (6.62,7.84)
+    .. (7.16,7.84);
   \draw[very thick,-{Stealth[length=3mm]}]
     (5.95,4.71) .. controls (6.35,4.71) and (6.62,5.59)
-    .. (7.03,5.59);
+    .. (7.16,5.59);
   \draw[very thick,-{Stealth[length=3mm]}]
     (5.95,2.26) .. controls (6.35,2.26) and (6.62,2.49)
-    .. (7.03,2.49);
+    .. (7.16,2.49);
 
   % ---------------------------------------------------------------
   % Probe heads and output boxes
   % ---------------------------------------------------------------
-  \foreach \yy/\label in {8.05/MOA probe,7.00/phone probe,
-                           5.25/MOA probe,4.20/phone probe,
-                           2.82/MOA probe,1.77/phone probe} {
+  \foreach \yy/\label/\output in {8.05/MOA probe/moa labels,7.00/phone probe/phone labels,
+                                  5.25/MOA probe/moa labels,4.20/phone probe/phone labels,
+                                  2.82/MOA probe/moa labels,1.77/phone probe/phone labels} {
     \fill[probe] (8.78,\yy) rectangle (11.78,\yy+.94);
     \node[font=\sffamily\fontsize{8}{10}\selectfont,text=white,anchor=west]
       at (8.98,\yy+.47) {\label};
-    \draw[line width=.8pt] (11.98,\yy) rectangle (12.34,\yy+.94);
+    \draw[line width=.8pt] (11.98,\yy) rectangle (13.55,\yy+.94);
+    \node[font=\sffamily\fontsize{7}{8}\selectfont,align=center,text width=1.45cm]
+      at (12.765,\yy+.47) {\output};
+    \draw[thick,-{Stealth[length=2.6mm]}]
+      (11.78,\yy+.47) -- (11.98,\yy+.47);
   }
 
   % Each frame-averaged embedding feeds its corresponding probe pair.
   \foreach \yy/\ya/\yb in {
-    8.64/8.52/7.47,
+    7.84/8.52/7.47,
     5.59/5.72/4.67,
     2.49/3.29/2.24
   } {
     \draw[thick,-{Stealth[length=2.6mm]}]
-      (7.34,\yy) .. controls (7.85,\yy) and (8.15,\ya)
+      (7.47,\yy) .. controls (7.95,\yy) and (8.15,\ya)
       .. (8.78,\ya);
     \draw[thick,-{Stealth[length=2.6mm]}]
-      (7.34,\yy) .. controls (7.85,\yy) and (8.15,\yb)
+      (7.47,\yy) .. controls (7.95,\yy) and (8.15,\yb)
       .. (8.78,\yb);
   }
 
   % Dashed grouping around the probe heads.
   \draw[dashed,line width=.9pt]
-    (8.58,1.58) rectangle (12.48,9.25);
+    (8.58,1.58) rectangle (13.68,9.25);
+\end{scope}
 
 \end{tikzpicture}
 }

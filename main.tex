@@ -156,8 +156,8 @@
     audio. We choose to probe three encoders that differ in their training strategies:
 
     \begin{alertblock}{Wav2Vec2.0 (12 layers, 768 dimensions)}
-      Wav2vec2 first has unsupervised pretraining on untranscribed audio, then is fine-tuned on transcribed speech.
-      This encoder is intended to be fine-tuned for specific applications.
+      Wav2vec2 is first pretrained on untranscribed speech, then can be fine-tuned (along with a decoder) with
+      labeled speech.
       \par\noindent\makebox[\linewidth][c]{\resizebox{\linewidth}{!}{%
       \begin{tikzpicture}[node distance=5mm and 5mm]
   \node[enc-io] (wvin) {audio};
@@ -175,10 +175,10 @@
       }}\par
     \end{alertblock}
     \begin{alertblock}{Whisper-small/large-v3 (12/32 layers, 768/1280 dimensions)}
-      The Whisper encoders undergo supervised multitask pretraining on transcribed audio along with a dedicated
-      decoder. 
-      % Tasks that the encoder-decoders are trained for include transcription, translation into English, 
-      % speech detection, and language identification. 80-channel log-magnitude mel-spectrogram 25ms windows with
+      The Whisper encoders are pretrained on transcribed audio along with a dedicated
+      multitask decoder. Tasks that the encoder-decoders are trained for include transcription, 
+      translation into English, speech detection, and language identification. 
+      % 80-channel log-magnitude mel-spectrogram 25ms windows with
       % stride of 10ms.
       \par\noindent\makebox[\linewidth][c]{\resizebox{\linewidth}{!}{%
       \begin{tikzpicture}[node distance=5mm and 5mm]
@@ -197,8 +197,8 @@
       }}\par
     \end{alertblock}
     \begin{alertblock}{Voxtral (32 layers, 1280 dimensions)}
-      Voxtral shares an architecture with Whisper-large-v3, but is fine-tuned along with an encoder adapter in order
-      to be used as input for an LLM.
+      Voxtral shares an architecture with Whisper-large-v3, but is fine-tuned along with an encoder adapter 
+      that is fine-tuned along with a decoder LLM. 
       \par\noindent\makebox[\linewidth][c]{\resizebox{\linewidth}{!}{%
       \begin{tikzpicture}[node distance=5mm and 5mm]
   \node[enc-io] (vxin) {log-mel\\spectrogram};
@@ -365,6 +365,11 @@
 
 \end{tikzpicture}
 }
+\end{center}
+\par\vspace{2mm}
+\begin{center}
+  \includegraphics[width=8cm]{figures/qr_link.png}\\
+  {\sffamily\bfseries\small See on github}
 \end{center}    % \end{alertblock}
     % \begin{alertblock}{Probing}
     %   We train linear classifiers to predict manner of articulation and phone label from segment-averaged representations.

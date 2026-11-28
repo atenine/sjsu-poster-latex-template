@@ -238,8 +238,8 @@
   
   \begin{block}{Probing}
     Clips from the TIMIT dataset are split at the segment-level, then passed through encoders. 
-    Segment embeddings are averaged over the time dimension before being used to train fully-connected linear
-    classifiers to predict manner of articulation and phone labels.
+    The encoders' intermediate representations are used to train fully-connected linear classifiers 
+    (200 neurons, ReLU activation) to predict manner of articulation (MOA) and phone labels.
 
     % \begin{alertblock}{Time-averaged Frame Representations}
 \begin{center}
@@ -261,10 +261,10 @@
     at (3.225,11.25) {encoder preprocessor};
 
   \draw[very thick,-{Stealth[length=3mm]}]
-    (6.60,13.35) .. controls (5.80,12.95) and (3.35,12.25)
+    (6.60,13.25) .. controls (5.80,12.95) and (3.35,12.25)
     .. (2.50,11.75);
   \draw[very thick,-{Stealth[length=3mm]}]
-    (9.18,13.35) .. controls (8.00,12.95) and (5.05,12.25)
+    (9.18,13.25) .. controls (8.00,12.95) and (5.05,12.25)
     .. (4.00,11.75);
   \draw[very thick,-{Stealth[length=3mm]}]
     (3.225,10.72) -- (3.225,10.05);
@@ -283,24 +283,24 @@
   \node[font=\rmfamily\fontsize{10}{12}\selectfont] at (3.11,9.025) {transformer layer 1};
 
   \fill[embedgray] (0.30,7.725) rectangle (5.92,8.275);
-  \fill[orangehi] (3.25,7.725) rectangle (3.53,8.275);
-  \fill[orangehi] (4.50,7.725) rectangle (4.65,8.275);
+  % \fill[orangehi] (3.25,7.725) rectangle (3.53,8.275);
+  % \fill[orangehi] (4.50,7.725) rectangle (4.65,8.275);
   \node[font=\sffamily\fontsize{7}{8}\selectfont] at (3.11,8.00) {(encoder dimension $\times$ time)};
 
   \fill[white] (0.27,5.975) rectangle (5.95,6.875);
   \node[font=\rmfamily\fontsize{10}{12}\selectfont] at (3.11,6.425) {intermediate layer};
 
   \fill[embedgray] (0.30,4.975) rectangle (5.92,5.525);
-  \fill[orangehi] (3.25,4.975) rectangle (3.53,5.525);
-  \fill[orangehi] (4.50,4.975) rectangle (4.65,5.525);
+  % \fill[orangehi] (3.25,4.975) rectangle (3.53,5.525);
+  % \fill[orangehi] (4.50,4.975) rectangle (4.65,5.525);
   \node[font=\sffamily\fontsize{7}{8}\selectfont] at (3.11,5.25) {(encoder dimension $\times$ time)};
 
   \fill[white] (0.27,3.175) rectangle (5.95,4.075);
   \node[font=\rmfamily\fontsize{10}{12}\selectfont] at (3.11,3.625) {transformer final layer};
 
   \fill[embedgray] (0.30,2.225) rectangle (5.92,2.775);
-  \fill[orangehi] (3.28,2.225) rectangle (3.57,2.775);
-  \fill[orangehi] (4.53,2.225) rectangle (4.68,2.775);
+  % \fill[orangehi] (3.28,2.225) rectangle (3.57,2.775);
+  % \fill[orangehi] (4.53,2.225) rectangle (4.68,2.775);
   \node[font=\sffamily\fontsize{7}{8}\selectfont] at (3.11,2.50) {(encoder dimension $\times$ time)};
 
   \node[font=\fontsize{12}{14}\selectfont] at (4.25,7.40) {$\vdots$};
@@ -421,20 +421,19 @@
 
     \includegraphics[width=\linewidth]{figures/layerwiseMoaAccuracy.png}\\
 
-    Wav2vec has a downwards trend as we probe through its layers, as opposed to the 
-    upward trend for other encoders. We see worse performance for 
-    probing the whisper-large encoder compared to voxtral's encoder, despite both of them using 
-    identical architectures.
+    Earlier probing work [8] sees phone accuracy increase until layers 4-7, but when using probes 
+    with an identical architecture, we see both MOA and phone label accuracies for wav2vec
+    decrease as we probe to deeper layers. This discrepancy suggests that probing performance 
+    may be dependent on unshared probe hyperparameters.
 
     \includegraphics[width=\linewidth]{figures/layerwisePhoneAccuracy.png}\\
 
-    We see similar trends for phone identification. Probes are able to better retrieve phone label for voxtral than
-    for whisper-large, suggesting that its (singletask) post-training may increase the presence of 
-    these information compared to the higher-level information that whisper's multitask post-training may require.
+    Probes are able to better retrieve phone label and MOA for voxtral than for whisper-large, 
+    suggesting that its (singletask) post-training may increase the presence of these information 
+    compared to the higher-level information that whisper's multitask post-training may require.
 
-    Our discrepancy suggests that probing performance may be dependent on unshared probe 
-    hyperparameters. Additionally, the difference in performance between probing the Voxtral and 
-    whisper-large encoders suggests that probes may be sensitive to encoder posttraining strategies.
+    The difference in performance between Voxtral and whisper-large probes suggests that probes 
+    may be sensitive to encoder posttraining strategies.
 
   \end{block}
 

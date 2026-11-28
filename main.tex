@@ -38,7 +38,7 @@
 
 \title{Probing acoustic information through transformer-based speech encoders}
 
-\author{Vidhaat Dunna, Hahn Koo, Kelsey Kraus}
+\author{Vidhaat Dunna, Kelsey Kraus}
 
 \institute[shortinst]{San José State University}
 
@@ -57,8 +57,13 @@
 % ====================
 
 % use this to include logos on the left and/or right side of the header:
-\logoright{\includegraphics[height=3cm]{sjsu_logos/sjsu_cs.png}}
+% \logoright{\includegraphics[height=3cm]{sjsu_logos/sjsu_cs.png}}
 \logoleft{\includegraphics[height=3cm]{sjsu_logos/DEPT_LINGLANG_Gold_Reversed.png}}
+\logoright{%
+  \begin{tabular}{c}
+    \includegraphics[width=8cm]{figures/qr_link.png}\\
+    {\sffamily\bfseries\small See on github}
+  \end{tabular}}
 % \logoleft{\includegraphics[height=5cm]{sjsu_logos/SJSU_University_monogram_Reversed.png}}
 % \logoright{\includegraphics[height=6cm]{sjsu_logos/SpartanSpirit[reversed].png}}
 
@@ -84,7 +89,13 @@
     font=\fontsize{34}{39}\selectfont
   },
   enc-stage/.style={
-    draw=encBlue, fill=encLightBlue, very thick, rounded corners=1pt,
+    draw=borderblue, fill=encoderblue, very thick, rounded corners=1pt,
+    align=center, text width=79mm, minimum width=83mm,
+    minimum height=34mm, inner sep=1mm,
+    font=\fontsize{34}{39}\selectfont
+  },
+  enc-neutral/.style={
+    draw=coolgray, fill=white, very thick, rounded corners=1pt,
     align=center, text width=79mm, minimum width=83mm,
     minimum height=34mm, inner sep=1mm,
     font=\fontsize{34}{39}\selectfont
@@ -160,8 +171,8 @@
       labeled speech.
       \par\noindent\makebox[\linewidth][c]{\resizebox{\linewidth}{!}{%
       \begin{tikzpicture}[node distance=5mm and 5mm]
-  \node[enc-io] (wvin) {audio};
-  \node[enc-stage, right=of wvin] (wvenc)
+  \node[enc-neutral] (wvin) {audio};
+  \node[enc-neutral, right=of wvin] (wvenc)
     {convolutional\\network};
   \node[enc-stage, right=of wvenc] (wvcontext)
     {Transformer\\blocks};
@@ -176,14 +187,14 @@
     \end{alertblock}
     \begin{alertblock}{Whisper-small/large-v3 (12/32 layers, 768/1280 dimensions)}
       The Whisper encoders are pretrained on transcribed audio along with a dedicated
-      multitask decoder. Tasks that the encoder-decoders are trained for include transcription, 
-      translation into English, speech detection, and language identification. 
+      multitask decoder trained include transcription, translation into English, 
+      speech detection, and language identification. 
       % 80-channel log-magnitude mel-spectrogram 25ms windows with
       % stride of 10ms.
       \par\noindent\makebox[\linewidth][c]{\resizebox{\linewidth}{!}{%
       \begin{tikzpicture}[node distance=5mm and 5mm]
-  \node[enc-io] (whin) {log-mel\\spectrogram};
-  \node[enc-stage, right=of whin] (whconv)
+  \node[enc-neutral] (whin) {log-mel\\spectrogram};
+  \node[enc-neutral, right=of whin] (whconv)
     {convolutional\\network};
   \node[enc-stage, right=of whconv] (whenc)
     {Transformer\\blocks};
@@ -201,10 +212,10 @@
       that is fine-tuned along with a decoder LLM. 
       \par\noindent\makebox[\linewidth][c]{\resizebox{\linewidth}{!}{%
       \begin{tikzpicture}[node distance=5mm and 5mm]
-  \node[enc-io] (vxin) {log-mel\\spectrogram};
+  \node[enc-neutral] (vxin) {log-mel\\spectrogram};
   \node[enc-stage, right=of vxin] (vxenc)
     {whisper L-v3\\encoder};
-  \node[enc-orange, right=of vxenc] (vxadapt)
+  \node[enc-neutral, right=of vxenc] (vxadapt)
     {audio\\adapter};
   \node[enc-context, right=of vxadapt] (vxllm)
     {multimodal\\LLM};
@@ -225,7 +236,7 @@
 \begin{column}{\colwidth}
 
   
-  \begin{block}{Preprocessing}
+  \begin{block}{Probing}
     Clips from the TIMIT dataset are split at the segment-level, then passed through encoders. 
     Segment embeddings are averaged over the time dimension before being used to train fully-connected linear
     classifiers to predict manner of articulation and phone labels.
@@ -244,7 +255,7 @@
   % ---------------------------------------------------------------
   % Audio preprocessing and encoder flow
   % ---------------------------------------------------------------
-  \draw[fill=encoderblue,draw=borderblue,line width=1.1pt]
+  \draw[fill=white,draw=coolgray,line width=1.1pt]
     (0.45,10.75) rectangle (6.00,11.75);
   \node[font=\sffamily\fontsize{11}{13}\selectfont]
     at (3.225,11.25) {encoder preprocessor};
@@ -274,7 +285,7 @@
   \fill[embedgray] (0.30,7.725) rectangle (5.92,8.275);
   \fill[orangehi] (3.25,7.725) rectangle (3.53,8.275);
   \fill[orangehi] (4.50,7.725) rectangle (4.65,8.275);
-  \node[font=\sffamily\fontsize{7}{8}\selectfont] at (3.11,8.00) {(time $\times$ encoder dimension)};
+  \node[font=\sffamily\fontsize{7}{8}\selectfont] at (3.11,8.00) {(encoder dimension $\times$ time)};
 
   \fill[white] (0.27,5.975) rectangle (5.95,6.875);
   \node[font=\rmfamily\fontsize{10}{12}\selectfont] at (3.11,6.425) {intermediate layer};
@@ -282,7 +293,7 @@
   \fill[embedgray] (0.30,4.975) rectangle (5.92,5.525);
   \fill[orangehi] (3.25,4.975) rectangle (3.53,5.525);
   \fill[orangehi] (4.50,4.975) rectangle (4.65,5.525);
-  \node[font=\sffamily\fontsize{7}{8}\selectfont] at (3.11,5.25) {(time $\times$ encoder dimension)};
+  \node[font=\sffamily\fontsize{7}{8}\selectfont] at (3.11,5.25) {(encoder dimension $\times$ time)};
 
   \fill[white] (0.27,3.175) rectangle (5.95,4.075);
   \node[font=\rmfamily\fontsize{10}{12}\selectfont] at (3.11,3.625) {transformer final layer};
@@ -290,7 +301,7 @@
   \fill[embedgray] (0.30,2.225) rectangle (5.92,2.775);
   \fill[orangehi] (3.28,2.225) rectangle (3.57,2.775);
   \fill[orangehi] (4.53,2.225) rectangle (4.68,2.775);
-  \node[font=\sffamily\fontsize{7}{8}\selectfont] at (3.11,2.50) {(time $\times$ encoder dimension)};
+  \node[font=\sffamily\fontsize{7}{8}\selectfont] at (3.11,2.50) {(encoder dimension $\times$ time)};
 
   \node[font=\fontsize{12}{14}\selectfont] at (4.25,7.40) {$\vdots$};
   \node[font=\fontsize{12}{14}\selectfont] at (4.25,4.625) {$\vdots$};
@@ -304,13 +315,13 @@
   % ---------------------------------------------------------------
   % Time-averaging embeddings
   % ---------------------------------------------------------------
-  \draw[fill=goldlight,draw=gold,dotted,line width=1.1pt]
-    (6.385,1.15) rectangle (8.535,10.58);
+  % \draw[fill=goldlight,draw=gold,dotted,line width=1.1pt]
+  %   (6.385,1.15) rectangle (8.535,10.58);
   \draw[line width=.8pt,decorate,decoration={brace,amplitude=6pt}]
-    (6.385,10.88) -- (8.535,10.88);
-  \node[font=\sffamily\fontsize{10}{12}\selectfont,align=center,text width=3.0cm] at (7.46,12.00)
-    {time-averaged\\embedding};
-  \node[font=\sffamily\fontsize{5}{6}\selectfont,align=center] at (7.46,11.45)
+    (6.385,8.72) -- (8.535,8.72);
+  \node[font=\sffamily\fontsize{10}{12}\selectfont,align=center,text width=3.0cm] at (7.46,9.55)
+    {time-averaged\\embeddings};
+  \node[font=\sffamily\fontsize{5}{6}\selectfont,align=center] at (7.46,9.05)
     {(1 $\times$ encoder dimension)};
   \fill[gold] (7.345,7.56) rectangle (7.655,8.44);
   \fill[gold] (7.345,4.81) rectangle (7.655,5.69);
@@ -367,10 +378,16 @@
 }
 \end{center}
 \par\vspace{2mm}
-\begin{center}
-  \includegraphics[width=8cm]{figures/qr_link.png}\\
-  {\sffamily\bfseries\small See on github}
-\end{center}    % \end{alertblock}
+\begin{block}{References}
+    {
+      \tiny
+      \nocite{*}
+      \bibliographystyle{ieeetr}
+      \vspace{-1ex}
+      \bibliography{poster}
+    }
+\end{block}
+    % \end{alertblock}
     % \begin{alertblock}{Probing}
     %   We train linear classifiers to predict manner of articulation and phone label from segment-averaged representations.
       
@@ -402,23 +419,29 @@
 \begin{column}{\colwidth}
   \begin{block}{Results}
 
-    \includegraphics[width=\linewidth]{figures/layerwisePhoneAccuracy.png}\\
     \includegraphics[width=\linewidth]{figures/layerwiseMoaAccuracy.png}\\
 
-    Our wav2vec2 results challenge prior probing findings, suggesting that probing performance
-    is sensitive to encoder training strategies and probe hyperparameters.
+    Wav2vec has a downwards trend as we probe through its layers, as opposed to the 
+    upward trend for other encoders. We see worse performance for 
+    probing the whisper-large encoder compared to voxtral's encoder, despite both of them using 
+    identical architectures.
+
+    \includegraphics[width=\linewidth]{figures/layerwisePhoneAccuracy.png}\\
+
+    We see similar trends for phone identification. Probes are able to better retrieve phone label for voxtral than
+    for whisper-large, suggesting that its (singletask) post-training may increase the presence of 
+    these information compared to the higher-level information that whisper's multitask post-training may require.
+
+    Our discrepancy suggests that probing performance may be dependent on unshared probe 
+    hyperparameters. Additionally, the difference in performance between probing the Voxtral and 
+    whisper-large encoders suggests that probes may be sensitive to encoder posttraining strategies.
 
   \end{block}
 
-  \begin{block}{References}
-    {
-      \tiny
-      \nocite{*}
-      \bibliographystyle{ieeetr}
-      \vspace{-1ex}
-      \bibliography{poster}
-    }
-  \end{block}
+  \begin{center}
+  \includegraphics[width=8cm]{figures/qr_link.png}\\
+  {\sffamily\bfseries\small See on github}
+  \end{center}
 \end{column}
 
 \separatorcolumn
